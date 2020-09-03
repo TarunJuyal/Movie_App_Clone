@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const db = mongoose.connect(
-  process.env.MONGO_URI ||
+  process.env.MONGODB_URI ||
     "mongodb+srv://tarun:tarun123@basic.gdldh.mongodb.net/basic",
   {
     useNewUrlParser: true,
