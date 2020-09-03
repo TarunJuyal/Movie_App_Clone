@@ -18,7 +18,7 @@ app.use("/api/favourite", favouriteRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server Started at ${port}...`);
+  console.log(`Server Starting at ${port}...`);
 });
 
 if (process.env.NODE_ENV === "production") {
