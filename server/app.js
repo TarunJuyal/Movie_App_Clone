@@ -4,7 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/userRoutes");
 const favouriteRoutes = require("./routes/favouriteRoutes");
-const path = require("");
+const path = require("path");
 
 const app = express();
 
