@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
+//mongodb+srv://tarun:tarun123@basic.gdldh.mongodb.net/basic
 const db = mongoose.connect(
-  process.env.MONGODB_URI ||
-    "mongodb+srv://tarun:tarun123@basic.gdldh.mongodb.net/basic",
+  process.env.MONGO_URI,
   {
     useNewUrlParser: true,
     useFindAndModify: false,

@@ -6,12 +6,12 @@ function sendMail(name, email, password) {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "letscode4@gmail.com",
-        pass: "johndoecoding",
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
     let mailOptions = {
-      from: "letscode4@gmail.com",
+      from: " MOVIE APP '<process.env.EMAIL>'",
       to: email,
       subject: "Registration SuccessFull",
       html: registrationCompletion(name, email, password),
