@@ -4,7 +4,8 @@ const registrationCompletion = require("./templates/registrationMail");
 function sendMail(name, email, password) {
   nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
-      host:"mail.google.com",
+      host:"smtp.gmail.com",
+      port:465,
       service: "gmail",
       auth: {
         user: process.env.EMAIL,
