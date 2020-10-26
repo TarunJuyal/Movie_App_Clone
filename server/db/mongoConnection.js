@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-//mongodb+srv://tarun:tarun123@basic.gdldh.mongodb.net/basic
+require("dotenv").config();
 const db = mongoose.connect(
   process.env.MONGO_URI,
   {

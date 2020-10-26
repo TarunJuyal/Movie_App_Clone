@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/userRoutes");
 const favouriteRoutes = require("./routes/favouriteRoutes");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 

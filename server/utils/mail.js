@@ -1,19 +1,41 @@
 const nodemailer = require("nodemailer");
+const { google }=require("googleapis")
 const registrationCompletion = require("./templates/registrationMail");
+require("dotenv").config();
+
+const OAuth2 = google.auth.OAuth2;
+const oauth2Client = new OAuth2(
+     process.env.clientId,
+     process.env.clientSecret, 
+     "https://developers.google.com/oauthplayground" 
+);
+  oauth2Client.setCredentials({
+     refresh_token:process.env.refreshToken
+});
+const accessToken =  oauth2Client.getAccessToken();
 
 function sendMail(name, email, password) {
+
   nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
       host:"smtp.gmail.com",
       port:465,
-      service: "gmail",
+      secure:true,
       auth: {
+        type: 'OAuth2',
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
+        clientId: process.env.clientId,
+        clientSecret: process.env.clientSecret,
+        refreshToken:process.env.refreshToken,
+        accessToken:accessToken,
+        expires: 3599
       },
+      tls: {
+         rejectUnauthorized: false
+      }
     });
     let mailOptions = {
-      from: " MOVIE APP '<process.env.EMAIL>'",
+      from: "' Movie App ' <process.env.EMAIL>",
       to: email,
       subject: "Registration SuccessFull",
       html: registrationCompletion(name, email, password),
