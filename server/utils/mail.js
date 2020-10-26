@@ -4,7 +4,7 @@ const registrationCompletion = require("./templates/registrationMail");
 function sendMail(name, email, password) {
   nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
-      host:"afternoon-garden-29640.herokuapp.com",
+      host:"mail.google.com",
       service: "gmail",
       auth: {
         user: process.env.EMAIL,
