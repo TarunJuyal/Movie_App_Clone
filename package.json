@@ -11,7 +11,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run backend\" \"npm run client\"",
     "client-install": "npm install --prefix client",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false GENERATE_SOURCEMAP=false npm install --prefix client && npm install npm run build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false GENERATE_SOURCEMAP=false npm install --prefix client && npm install"
   },
   "author": "Tarun Juyal",
   "license": "ISC",
