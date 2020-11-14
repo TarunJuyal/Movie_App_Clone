@@ -7,17 +7,21 @@ import {
   POSTER_SIZE,
 } from "../../config";
 import MainImage from "../LandingPage/Sections/MainImage";
-import { Descriptions, Button, Row } from "antd";
+import { Descriptions, Button, Row,Typography } from "antd";
 import GridCard from "../LandingPage/Sections/GridCard";
 import Favourite from "./Sections/Favourite";
 
+const {Title}=Typography;
+
 function MovieDetailPage(props) {
   const [Movie, setMovie] = useState([]);
+  const [Trailer, setTrailer] = useState("");
   const [Cast, setCast] = useState([]);
   const [CastViewToggle, setCastViewToggle] = useState(false);
   const movieId = props.match.params.movieId;
 
   useEffect(() => {
+    console.log(movieId);
     fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
       .then((response) => response.json())
       .then((response) => {
@@ -25,6 +29,9 @@ function MovieDetailPage(props) {
         fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
           .then((response) => response.json())
           .then((response) => setCast(response.cast));
+          fetch(`${API_URL}movie/${movieId}/videos?api_key=${API_KEY}`)
+          .then((response) => response.json())
+          .then((response) => setTrailer(`https://www.youtube.com/embed/${response.results[0].key}`));
       });
   }, [movieId]);
 
@@ -71,9 +78,16 @@ function MovieDetailPage(props) {
             {Movie.popularity}
           </Descriptions.Item>
         </Descriptions>
+        <div style={{ width: "85%",height:"40vw", margin: "1rem auto" }}>
+          <Title level={4}>Trailer</Title>
+          <hr />
+          {Trailer && <iframe title={movieId} width="100%" height="100%" src={Trailer} frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowFullScreen></iframe>}
+        </div>
         <br />
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button onClick={handleMovieCastToggle}>Movie Cast</Button>
+        <div style={{ display: "flex", marginTop:"2rem", justifyContent: "center" }}>
+        <Button onClick={handleMovieCastToggle}>{CastViewToggle?"Hide Movie Cast":"Show Movie Cast"}</Button>
         </div>
         <br />
         {CastViewToggle && (

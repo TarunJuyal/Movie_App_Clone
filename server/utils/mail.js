@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const { google }=require("googleapis")
 const registrationCompletion = require("./templates/registrationMail");
+const forgetPasswordMail=require("./templates/forgetPasswordMail");
 require("dotenv").config();
 
 const OAuth2 = google.auth.OAuth2;
@@ -14,7 +15,7 @@ const oauth2Client = new OAuth2(
 });
 const accessToken =  oauth2Client.getAccessToken();
 
-function sendMail(name, email, password) {
+function sendMail(name, email, password,resetPasswordToken) {
 
   nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
@@ -34,12 +35,22 @@ function sendMail(name, email, password) {
          rejectUnauthorized: false
       }
     });
-    let mailOptions = {
-      from: "' Movie App ' <process.env.EMAIL>",
+    let mailOptions={};
+    if(resetPasswordToken){
+     mailOptions = {
+      from: "' Movie App '<process.env.EMAIL>",
       to: email,
-      subject: "Registration SuccessFull",
+      subject: "Password Reset",
+      html: forgetPasswordMail(name,resetPasswordToken),
+    };
+    }else{
+    mailOptions = {
+      from: "' Movie App '<process.env.EMAIL>",
+      to: email,
+      subject: "Registration Completed SuccessFully",
       html: registrationCompletion(name, email, password),
     };
+    }
     // Send the Mail
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {

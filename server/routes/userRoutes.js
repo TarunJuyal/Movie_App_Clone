@@ -69,4 +69,40 @@ userRoutes.get("/logout", auth, (req, res) => {
   );
 });
 
+userRoutes.post("/forgotPassword", (req, res) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "Ooops....User Not Found!!",
+      });
+    }
+    user.generateResetToken((err, user) => {
+          if (err) return res.status(400).send(err);
+          sendMail(
+           `${user.firstName} ${user.lastName}`, 
+             user.email,
+            user.password,
+            user.resetPasswordToken
+          );
+          res.status(200).json({ success: true, message:`Reset Password Mail sent to ${user.email}` });
+        });
+});
+});
+
+userRoutes.post("/reset", (req, res) => {
+    User.findResetToken(req.body.resetPasswordToken,(err, user) => {
+          if (err) return res.status(400).send(err);
+          if (!user) return res.json({ success: false, message:"Link invalid or expired !!"});
+          user.password=req.body.password;
+          user.resetPasswordToken=null;
+          user.resetPasswordTokenExp=null;
+
+          user.save((err, doc) => {
+            if (err) return res.json({ success: false, err });
+            res.status(200).json({ success: true, message:`Password has been updated. Go back and login again.` });
+        });
+   });
+});
+
 module.exports = userRoutes;

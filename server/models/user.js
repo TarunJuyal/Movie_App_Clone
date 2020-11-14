@@ -13,6 +13,8 @@ const userSchema = mongoose.Schema({
   tokenExp: { type: Number },
   role: { type: Number, default: 0 },
   image: { type: String },
+  resetPasswordToken:{type:String},
+  resetPasswordTokenExp:{type:Number},
 });
 
 userSchema.pre("save", function (next) {
@@ -50,6 +52,18 @@ userSchema.methods.generateToken = function (cb) {
   });
 };
 
+userSchema.methods.generateResetToken = function (cb) {
+  let user = this;
+  let token = jwt.sign(user._id.toHexString(), "secret");
+  let tokenExp = moment().add(5, "minutes").valueOf();
+  user.resetPasswordTokenExp = tokenExp;
+  user.resetPasswordToken = token;
+  user.save(function (err, user) {
+    if (err) return cb(err);
+    cb(null, user);
+  });
+};
+
 userSchema.statics.findByToken = function (token, cb) {
   var user = this;
   jwt.verify(token, "secret", function (err, decode) {
@@ -59,6 +73,17 @@ userSchema.statics.findByToken = function (token, cb) {
     });
   });
 };
+
+userSchema.statics.findResetToken = function (token, cb) {
+  var user = this;
+  jwt.verify(token, "secret", function (err, decode) {
+    user.findOne({ _id: decode, resetPasswordToken: token }, function (err, user) {
+      if (err) return cb(err);
+      cb(null, user);
+    });
+  });
+};
+
 
 const User = mongoose.model("User", userSchema);
 module.exports = { User };
