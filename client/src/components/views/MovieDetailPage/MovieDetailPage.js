@@ -31,7 +31,12 @@ function MovieDetailPage(props) {
           .then((response) => setCast(response.cast));
           fetch(`${API_URL}movie/${movieId}/videos?api_key=${API_KEY}`)
           .then((response) => response.json())
-          .then((response) => setTrailer(`https://www.youtube.com/embed/${response.results[0].key}`));
+          .then((response) => {
+            console.log(response);
+            if(response?.results[0]?.key!==undefined){
+              setTrailer(`https://www.youtube.com/embed/${response?.results[0]?.key}`)
+            }
+          });
       });
   }, [movieId]);
 
@@ -78,13 +83,15 @@ function MovieDetailPage(props) {
             {Movie.popularity}
           </Descriptions.Item>
         </Descriptions>
-        <div style={{ width: "85%",height:"40vw", margin: "1rem auto" }}>
+        {Trailer && (
+          <div style={{ width: "85%",height:"40vw", margin: "1rem auto" }}>
           <Title level={4}>Trailer</Title>
           <hr />
-          {Trailer && <iframe title={movieId} width="100%" height="100%" src={Trailer} frameborder="0" 
+          <iframe title={movieId} width="100%" height="100%" src={Trailer} frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowFullScreen></iframe>}
+          allowFullScreen></iframe>
         </div>
+        )}
         <br />
         <div style={{ display: "flex", marginTop:"2rem", justifyContent: "center" }}>
         <Button onClick={handleMovieCastToggle}>{CastViewToggle?"Hide Movie Cast":"Show Movie Cast"}</Button>
