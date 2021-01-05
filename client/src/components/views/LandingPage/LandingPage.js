@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , Suspense } from "react";
 import { Typography, Row } from "antd";
 import {
   API_URL,
@@ -7,9 +7,13 @@ import {
   POSTER_SIZE,
   BACKDROP_SIZE,
 } from "../../config";
-import MainImage from "./Sections/MainImage";
-import GridCard from "./Sections/GridCard";
+import { LoadingOutlined } from "@ant-design/icons";
+
+const MainImage = React.lazy(()=> import("./Sections/MainImage"));
+const GridCard = React.lazy(()=> import("./Sections/GridCard"));
+
 const { Title } = Typography;
+
 function LandingPage() {
   const [Movies, setMovies] = useState([]);
   const [CurrentPage, setCurrentPage] = useState(0);
@@ -39,7 +43,8 @@ function LandingPage() {
 
   return (
     <div style={{ width: "100%", margin: "0" }}>
-      {Movies[0] && (
+      <Suspense fallback={<div className="app"><LoadingOutlined style={{ fontSize: "4rem" }} /></div>}>
+        {Movies[0] && (
         <MainImage
           image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${Movies[0].backdrop_path}`}
           title={Movies[0].original_title}
@@ -70,7 +75,9 @@ function LandingPage() {
             Load More
           </button>
         </div>
+        <br/>
       </div>
+      </Suspense>
     </div>
   );
 }

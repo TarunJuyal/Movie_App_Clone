@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import {
   API_URL,
   API_KEY,
@@ -6,10 +6,12 @@ import {
   BACKDROP_SIZE,
   POSTER_SIZE,
 } from "../../config";
-import MainImage from "../LandingPage/Sections/MainImage";
 import { Descriptions, Button, Row,Typography } from "antd";
-import GridCard from "../LandingPage/Sections/GridCard";
-import Favourite from "./Sections/Favourite";
+import { LoadingOutlined } from "@ant-design/icons";
+
+const MainImage = React.lazy(()=> import("../LandingPage/Sections/MainImage"));
+const GridCard = React.lazy(()=> import("../LandingPage/Sections/GridCard"));
+const Favourite = React.lazy(()=> import("./Sections/Favourite"));
 
 const {Title}=Typography;
 
@@ -21,7 +23,6 @@ function MovieDetailPage(props) {
   const movieId = props.match.params.movieId;
 
   useEffect(() => {
-    console.log(movieId);
     fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`)
       .then((response) => response.json())
       .then((response) => {
@@ -32,7 +33,6 @@ function MovieDetailPage(props) {
           fetch(`${API_URL}movie/${movieId}/videos?api_key=${API_KEY}`)
           .then((response) => response.json())
           .then((response) => {
-            console.log(response);
             if(response?.results[0]?.key!==undefined){
               setTrailer(`https://www.youtube.com/embed/${response?.results[0]?.key}`)
             }
@@ -45,8 +45,9 @@ function MovieDetailPage(props) {
   };
 
   return (
-    <div>
-      {Movie && (
+    <div style={{ width: "100%", margin: "0" }}>
+      <Suspense fallback={<div className="app"><LoadingOutlined style={{ fontSize: "4rem" }} /></div>}>
+        {Movie && (
         <MainImage
           image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${Movie.backdrop_path}`}
           title={Movie.original_title}
@@ -87,7 +88,7 @@ function MovieDetailPage(props) {
           <div style={{ width: "85%",height:"40vw", margin: "1rem auto" }}>
           <Title level={4}>Trailer</Title>
           <hr />
-          <iframe title={movieId} width="100%" height="100%" src={Trailer} frameborder="0" 
+          <iframe title={movieId} width="100%" height="100%" src={Trailer} frameBorder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
           allowFullScreen></iframe>
         </div>
@@ -114,6 +115,7 @@ function MovieDetailPage(props) {
           </Row>
         )}
       </div>
+      </Suspense>
     </div>
   );
 }

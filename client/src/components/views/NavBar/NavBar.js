@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import LeftMenu from "./Sections/LeftMenu";
-import RightMenu from "./Sections/RightMenu";
+import React, { useState, Suspense } from "react";
 import { Drawer, Button } from "antd";
 import Icon from "@ant-design/icons";
 import "./Sections/Navbar.css";
 import Logo from "../../../images/Logo.png";
+import { LoadingOutlined } from "@ant-design/icons";
+
+const LeftMenu = React.lazy(()=>import("./Sections/LeftMenu"));
+const RightMenu = React.lazy(()=>import("./Sections/RightMenu"));
 
 function NavBar() {
   const [visible, setVisible] = useState(false);
@@ -18,7 +20,8 @@ function NavBar() {
   };
 
   return (
-    <nav
+    <Suspense fallback={<div className="app"><LoadingOutlined style={{ fontSize: "4rem" }} /></div>}>
+        <nav
       className="menu"
       style={{ position: "fixed", zIndex: 5, width: "100%" }}
     >
@@ -58,6 +61,7 @@ function NavBar() {
         </Drawer>
       </div>
     </nav>
+    </Suspense>
   );
 }
 

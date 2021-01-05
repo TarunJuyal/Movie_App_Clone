@@ -18,14 +18,14 @@ function Favourite(props) {
       if (response.data.success) {
         setFavouriteNumber(response.data.FavouriteNumber);
       } else {
-        console.log("Failed to get favourite number");
+        console.warn("Failed to get favourite number");
       }
     });
     axios.post("/api/favourite/favourited", variable).then((response) => {
       if (response.data.success) {
         setFavourited(response.data.Favourited);
       } else {
-        console.log("Failed to get favourite info");
+        console.warn("Failed to get favourite info");
       }
     });
   }, []);

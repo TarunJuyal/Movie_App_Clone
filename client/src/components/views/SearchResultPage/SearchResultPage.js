@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { IMAGE_BASE_URL, POSTER_SIZE, API_KEY, API_URL } from "../../config";
 import { Typography, Row } from "antd";
-import GridCard from "../LandingPage/Sections/GridCard";
+import { LoadingOutlined } from "@ant-design/icons";
+
+const GridCard = React.lazy(()=> import("../LandingPage/Sections/GridCard"))
 
 const { Title } = Typography;
 
@@ -20,7 +22,8 @@ function SearchResultPage(props) {
   }, []);
 
   return (
-    <div style={{ width: "85%", margin: "1rem auto" }}>
+    <Suspense fallback={<div className="app"><LoadingOutlined style={{ fontSize: "4rem" }} /></div>}>
+      <div style={{ width: "85%", margin: "1rem auto" }}>
       <Title level={2}> Search Results </Title>
       <hr />
       <Row gutter={[16, 16]}>
@@ -37,6 +40,7 @@ function SearchResultPage(props) {
           ))}
       </Row>
     </div>
+    </Suspense>
   );
 }
 
