@@ -2,8 +2,8 @@ import React, { Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import Auth from "../hoc/auth";
 import { LoadingOutlined } from "@ant-design/icons";
+import LandingPage from "./views/LandingPage/LandingPage"
 
-const LandingPage = React.lazy(()=> import("./views/LandingPage/LandingPage"));
 const LoginPage = React.lazy(()=> import("./views//LoginPage/LoginPage"));
 const RegisterPage = React.lazy(()=> import("./views/RegisterPage/RegisterPage"));
 const MovieDetailPage = React.lazy(()=> import("./views/MovieDetailPage/MovieDetailPage"));
